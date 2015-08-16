@@ -2,46 +2,41 @@
 
 
 ## Loading and preprocessing the data
-1. Load the data.
+
+Load the data.
 
 ```r
 act_ds <- read.csv("activity.csv")
 library(dplyr) # load dplyr library for wrangling data for this project.
 ```
-2. Process/transform the data (if necessary) into a format suitable for your analysis and calculate the total number of steps taken per day
+
+Process/transform the data (if necessary) into a format suitable for your analysis and calculate the total number of steps taken per day
 
 
 ```r
 DailyStepsTotal <- act_ds %>%           # Read imported step data
         filter(!is.na(steps)) %>%       # Ingore all NA values
         group_by(date) %>%              # Group records by date
-        summarise(TotSteps = sum(steps))# Sum each day's steps
-```
-#### What is mean total number of steps taken per day?
-1. Calculate the total number of steps taken per day.  
-  
-
-```r
-        sum(DailyStepsTotal$TotSteps)
+        summarise(TotSteps = sum(steps))# Total steps taken per day
 ```
 
-```
-## [1] 570608
-```
+## This section shows the mean total of steps per day.
 
-2. Make a histogram of the total number of steps taken each day
+Make a histogram of the total number of steps taken each day
 
 
 ```r
 hist(as.vector(DailyStepsTotal$TotSteps), #From R's base plotting system
-     main="Daily Step Count Histogram",
+     main="Daily Steps Count Histogram",
      col="green", border="blue",
-     xlab="Steps", ylab="Days")
+     xlab="Steps", ylab="Days",
+     breaks = seq(0, 22000, by = 2000))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
   
-3. Calculate and report the mean and median of the total number of steps taken per day
+Calculate and report the mean and median of the total number of steps taken per day
+
 
 ```r
 mean(DailyStepsTotal$TotSteps) # Calculate Mean
@@ -61,7 +56,7 @@ median(DailyStepsTotal$TotSteps) # Calculate Median
 
 ## What is the average daily activity pattern?
 
-1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 
 ```r
@@ -74,13 +69,15 @@ x <- dsInt$interval
 y <- dsInt$FivSteps # Average Steps Per Five Minute Interval
 
 # Create line grqphs
-plot( x,y, type="l", col="blue",ylab="Average Steps", xlab="5 Min Intervals", 
+plot( x,y, type="l" ,col="blue",ylab="Average Steps", 
+      xlab="5 Min Intervals", 
       main="All Days Averaged Steps Per 5 Minutes", fg="blue")
+      abline(v=dsInt[which(dsInt$FivSteps == max(dsInt$FivSteps)),1], col="red",lty=2)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
-2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 
 ```r
@@ -95,7 +92,7 @@ plot( x,y, type="l", col="blue",ylab="Average Steps", xlab="5 Min Intervals",
 ```
 
 ## Imputing missing values
-1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
 
 ```r
@@ -107,16 +104,17 @@ plot( x,y, type="l", col="blue",ylab="Average Steps", xlab="5 Min Intervals",
 ```
 ## [1] 2304
 ```
-2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval.  
+
+Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval.  
 
 **Solution:** *Use the logical vector; index, to find rows with missing values and replace na with the mean from the 5-minute interval in the joined data frame.*
 
 
 ```r
-        jImp$steps[index] <- (jImp$FivSteps[index])
+        jImp$steps[index] <- jImp$FivSteps[index]
 ```
   
-3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
+Create a new dataset that is equal to the original dataset but with the missing data filled in.
   
 **Answer** *New dataset created and structure shown to illustrate missing values have been imputed*
   
@@ -146,7 +144,7 @@ plot( x,y, type="l", col="blue",ylab="Average Steps", xlab="5 Min Intervals",
 ```
 *The* **act_ds_imp** *Data Frame created above contains the imputed value using the mean of 5-minute intervals.*
 
-4a. Make a histogram of the total number of steps taken each day.
+Make a histogram of the total number of steps taken each day.
 
 
 ```r
@@ -157,12 +155,13 @@ DailyStepsTotal2 <- act_ds_imp %>%      # Read imputed step data
    hist(as.vector(DailyStepsTotal2$TotSteps), 
      main="Daily Step Count with Imputed Values Histogram",
      col="green", border="blue",
-     xlab="Steps", ylab="Days")  
+     xlab="Steps", ylab="Days",
+     breaks = seq(0, 22000, by = 2000))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
   
-4b. Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? 
+Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? 
 
 **Answer:** *The mean did not change.  Imputing the missing values with data from the average 5 minute intervals moved the median to be equal the mean. So, there was less than 1 step difference between the below median results and the prior. This change is not significant.*
   
@@ -182,9 +181,9 @@ DailyStepsTotal2 <- act_ds_imp %>%      # Read imputed step data
 ```
 ## [1] 10766.19
 ```
-4c. What is the impact of imputing missing data on the estimates of the total daily number of steps?
+What is the impact of imputing missing data on the estimates of the total daily number of steps?
   
-**Answer:** *Imputing the missing values with the mean from the 5 minute interval data created 86,129.51 total additional steps for an average of 1625.085 additional steps per day.*
+**Answer:** *Imputing the missing values by using the mens from the 5 minute interval data created an additional 86,129.51 tsteps for an average of 1625.085 additional steps per day.*
 
 
 ```r
@@ -225,8 +224,7 @@ DailyStepsTotal2 <- act_ds_imp %>%      # Read imputed step data
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-
-1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
 
 
 ```r
@@ -237,7 +235,7 @@ DailyStepsTotal2 <- act_ds_imp %>%      # Read imputed step data
            summarise(FivSteps = mean(steps))
 ```
   
-2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
+Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
   
 
 ```r
@@ -256,6 +254,6 @@ DailyStepsTotal2 <- act_ds_imp %>%      # Read imputed step data
            )
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-15-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png) 
   
 *The test subject appears to begin walking activities more abruptly on weekdays and are including regular longer walks as part of morning activities.  The weekend pattern suggest a more gradual increase in steps but a higher sustained levels of walking throughout the day.*
