@@ -125,7 +125,7 @@ Calculate and report the mean and median total number of steps taken per day. Do
 ```
 What is the impact of imputing missing data on the estimates of the total daily number of steps?
   
-**Answer:** *Imputing the missing values by using the mens from the 5 minute interval data created an additional 86,129.51 tsteps for an average of 1625.085 additional steps per day.*
+**Answer:** *Imputing the missing values by using the means from the 5 minute interval data created an additional 86,129.51 total steps for an average of 1625.085 additional steps per day.*
 
 ```{r echo=TRUE}
    # Total daily steps without imputation

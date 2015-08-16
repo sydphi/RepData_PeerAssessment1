@@ -157,7 +157,7 @@ plot( x,y, type=&quot;l&quot; ,col=&quot;blue&quot;,ylab=&quot;Average Steps&quo
 <pre class="r"><code>   median(DailyStepsTotal2$TotSteps) # Calculate the Median total steps per day.</code></pre>
 <pre><code>## [1] 10766.19</code></pre>
 <p>What is the impact of imputing missing data on the estimates of the total daily number of steps?</p>
-<p><strong>Answer:</strong> <em>Imputing the missing values by using the mens from the 5 minute interval data created an additional 86,129.51 tsteps for an average of 1625.085 additional steps per day.</em></p>
+<p><strong>Answer:</strong> <em>Imputing the missing values by using the means from the 5 minute interval data created an additional 86,129.51 total steps for an average of 1625.085 additional steps per day.</em></p>
 <pre class="r"><code>   # Total daily steps without imputation
    sum(DailyStepsTotal$TotSteps)</code></pre>
 <pre><code>## [1] 570608</code></pre>
